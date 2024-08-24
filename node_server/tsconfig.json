@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"lib": ["es2017", "es2020", "esnext.asynciterable"],
+		// "typeRoots": ["./node_modules/@types", "./common/types/*"],
+		"rootDir": ".",
+		// "types": ["jest"],
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "node",
+		"module": "commonjs",
+		"pretty": true,
+		"sourceMap": true,
+		"strict": false,
+		"outDir": "./dist",
+		"allowJs": true,
+		"noEmit": false,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"strictPropertyInitialization": false
+	},
+	"include": ["server/server.ts", "./core/**/*", "./common/**/*"],
+	"exclude": ["node_modules"]
+}

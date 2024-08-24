@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  node_server:
+    container_name: node_server
+    restart: unless-stopped
+    build:
+      context: ./node_server
+      dockerfile: Dockerfile
+    image: node_server:1.0.0
+    ports:
+      - 6000:6000
+    networks:
+      - shared-network
+    volumes:
+      - ./node_server:/app/
+      - /app/node_modules
+
+  user:
+    container_name: client-user
+    restart: unless-stopped
+    build:
+      context: ./client/user
+      dockerfile: Dockerfile
+    image: client_user_production:1.0.0
+    ports:
+      - 4002:4002
+    networks:
+      - shared-network
+    depends_on:
+      - node_server
+    volumes:
+      - ./client/user:/app/
+      - /app/node_modules
+      - /app/.next
+
+  django_server:
+    container_name: django_server
+    restart: unless-stopped
+    build:
+      context: ./django_server/pdfparser
+      dockerfile: Dockerfile
+    image: django_server:1.0.0
+    ports:
+      - 6969:6969
+    networks:
+      - shared-network
+    volumes:
+      - ./django_server/pdfparser:/app/
+
+  redis:
+    image: "redis:7.0.15"
+    command: ["redis-server"]
+    networks:
+      - shared-network
+
+  celery:
+    container_name: django_celery
+    build: ./django_server/pdfparser
+    command: ["celery", "-A" , "pdfparser" , "worker" , "--loglevel=info"]
+    depends_on:
+      - redis
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    driver: bridge
